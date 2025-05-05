@@ -1,5 +1,5 @@
 import yaml
-from dataclasses import dataclass, asdict
+from dataclasses import dataclass, asdict, field
 from typing import List
 from lingua import Language
 
@@ -9,7 +9,7 @@ class Config:
   stt_model: str = 'small'
   enable_tts: bool = True
   enable_osc: bool = True
-  language_to_detect: List[str] = ["ENGLISH", "JAPANESE", "CHINESE"]
+  language_to_detect: List[str] = field(default_factory=lambda: ["ENGLISH", "JAPANESE", "CHINESE"])
   
   def validate(self):
     for lang in self.language_to_detect:
