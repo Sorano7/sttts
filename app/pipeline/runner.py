@@ -17,23 +17,22 @@ class Runner:
     
     self.audio_recorder = AudioRecorder(self.audio_queue)
     self.transcriber = WhisperClient(self.audio_queue, self.text_queue, self.config.stt_model)
-    self.text_processor = TextProcessor(self.text_queue, self.config.enable_tts, self.config.enable_osc)
+    self.text_processor = TextProcessor(self.text_queue, self.config.output_device, self.config.enable_tts, self.config.enable_osc)
     
   async def run(self):
-    record_task = asyncio.create_task(self.audio_recorder.start())
-    transcribe_task = asyncio.create_task(self.transcriber.start())
-    text_task = asyncio.create_task(self.text_processor.start())
-    
+    tasks = [
+      asyncio.create_task(self.audio_recorder.start()),
+      asyncio.create_task(self.transcriber.start()),
+      asyncio.create_task(self.text_processor.start())
+    ]
+
     try:
-      while True:
-        await asyncio.sleep(0.1)
+      await asyncio.gather(*tasks)
     finally:
       await self.audio_recorder.stop()
       await self.transcriber.stop()
       await self.text_processor.stop()
       
-      await asyncio.gather(
-        record_task,
-        transcribe_task,
-        text_task,
-      )
+      for task in tasks:
+        task.cancel()
+      await asyncio.gather(*task, return_exceptions=True)
