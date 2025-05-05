@@ -118,7 +118,3 @@ class AudioRecorder:
   async def stop(self):
     print("[AudioRecorder] Stopped.")
     self.stop_event.set()
-    
-async def start_recorder(queue: asyncio.Queue):
-  recorder = AudioRecorder(queue)
-  recorder.start()
