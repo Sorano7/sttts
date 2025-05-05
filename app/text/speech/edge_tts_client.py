@@ -3,18 +3,17 @@ import os
 import edge_tts
 import tempfile
 from pygame import mixer
-from typing import Dict
 from .utils import detect_language
 
 class EdgeTTSClient:
   def __init__(
     self, 
-    models: Dict[str, str] = {
+    output_device,
+    models = {
       "ENGLISH": "en-US-AnaNeural",
       "JAPANESE": "ja-JP-NanamiNeural",
       "CHINESE": "zh-CN-XiaoyiNeural"
     },
-    output_device="VoiceMeeter Aux Input (VB-Audio VoiceMeeter AUX VAIO)"
   ):
     self.models = models
     self.output_device = output_device

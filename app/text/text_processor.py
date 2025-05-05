@@ -6,11 +6,12 @@ class TextProcessor:
   def __init__(
     self,
     queue: asyncio.Queue,
+    tts_output_device,
     send_to_tts = True,
-    send_to_osc = True
+    send_to_osc = True,
   ):
     self.queue = queue
-    self.tts_client = EdgeTTSClient(self.queue) if send_to_tts else None
+    self.tts_client = EdgeTTSClient(tts_output_device) if send_to_tts else None
     self.osc_client = OSCClient() if send_to_osc else None
       
     self.stop_event = asyncio.Event()
@@ -41,4 +42,5 @@ class TextProcessor:
       self.osc_client.process_text(text)
       
   async def stop(self):
+    print("[TextProcessor] Stopped.")
     self.stop_event.set()
