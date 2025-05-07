@@ -3,17 +3,14 @@ import os
 import edge_tts
 import tempfile
 from pygame import mixer
+from typing import Dict
 from .utils import detect_language
 
 class EdgeTTSClient:
   def __init__(
     self, 
-    output_device,
-    models = {
-      "ENGLISH": "en-US-AnaNeural",
-      "JAPANESE": "ja-JP-NanamiNeural",
-      "CHINESE": "zh-CN-XiaoyiNeural"
-    },
+    output_device: str,
+    models: Dict[str, str]
   ):
     self.models = models
     self.output_device = output_device
@@ -43,7 +40,7 @@ class EdgeTTSClient:
       print("[EdgeTTSClient] Error:", e)
       
   def model_to_use(self, text):
-    language = detect_language(text)
+    language = detect_language(text, list(self.models.keys()))
     if language not in self.models.keys():
       return None
     return self.models[language]

@@ -3,7 +3,10 @@ from lingua import Language, LanguageDetectorBuilder
 
 DEFAULT_LANGS = [Language.ENGLISH, Language.JAPANESE, Language.CHINESE]
 
-def detect_language(text, languages: List[Language]=[Language.ENGLISH, Language.JAPANESE, Language.CHINESE]):
+def detect_language(text, languages: List[Language]):
+  if not languages:
+    return None
+
   detector = LanguageDetectorBuilder.from_languages(*languages).with_low_accuracy_mode().build()
   
   detected = []

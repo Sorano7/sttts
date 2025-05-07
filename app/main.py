@@ -16,7 +16,7 @@ class STTTS:
       config = Config.load(self.CONFIG_PATH)
       self.config = config
     except Exception as e:
-      print("[STTTS] Invalid config file. Generating new config file...")
+      print(f"[STTTS] Invalid config file: {e}. Generating new config file...")
       try:
         os.rename(self.CONFIG_PATH, f"{self.CONFIG_PATH}.old")
       except:

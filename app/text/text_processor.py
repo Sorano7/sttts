@@ -1,4 +1,5 @@
 import asyncio
+from ..config import Config
 from .speech.edge_tts_client import EdgeTTSClient
 from .vrchat.osc_client import OSCClient
 
@@ -6,13 +7,14 @@ class TextProcessor:
   def __init__(
     self,
     queue: asyncio.Queue,
-    tts_output_device,
-    send_to_tts = True,
-    send_to_osc = True,
+    config: Config
   ):
     self.queue = queue
-    self.tts_client = EdgeTTSClient(tts_output_device) if send_to_tts else None
-    self.osc_client = OSCClient() if send_to_osc else None
+    self.tts_client = EdgeTTSClient(
+      output_device=config.output_device, 
+      models=config.tts_models
+    ) if config.enable_tts else None
+    self.osc_client = OSCClient()  if config.enable_osc else None
       
     self.stop_event = asyncio.Event()
     

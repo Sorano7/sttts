@@ -15,9 +15,18 @@ class Runner:
     self.audio_queue = asyncio.Queue()
     self.text_queue = asyncio.Queue()
     
-    self.audio_recorder = AudioRecorder(self.audio_queue)
-    self.transcriber = WhisperClient(self.audio_queue, self.text_queue, self.config.stt_model)
-    self.text_processor = TextProcessor(self.text_queue, self.config.output_device, self.config.enable_tts, self.config.enable_osc)
+    self.audio_recorder = AudioRecorder(
+      output_queue=self.audio_queue
+    )
+    self.transcriber = WhisperClient(
+      audio_queue=self.audio_queue, 
+      text_queue=self.text_queue, 
+      model_size=self.config.stt_model
+    )
+    self.text_processor = TextProcessor(
+      queue=self.text_queue,
+      config=self.config
+    )
     
   async def run(self):
     tasks = [
