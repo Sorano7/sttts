@@ -8,3 +8,7 @@ __pycache__/
 
 config.yaml
 config.yaml.old
+
+build/
+dist/
+*.spec
