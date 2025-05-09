@@ -3,7 +3,10 @@ import sys
 import asyncio
 from .pipeline.runner import Runner
 from .config import Config
+from pathlib import Path
+from .logger import get_logger
 
+logger = get_logger("STTTS")
 
 class STTTS:
   def __init__(self):
@@ -12,16 +15,19 @@ class STTTS:
     self.runner = Runner(self.config)
   
   def _get_config_path(self):
-    exe_path = sys.executable if getattr(sys, 'frozen', False) else __file__
-    exe_dir = os.path.dirname(os.path.abspath(exe_path))
-    return os.path.join(exe_dir, "config.yml")
+    if getattr(sys, 'frozen', False):
+      base_path = Path(os.path.abspath(sys.executable)).parent
+    else:
+      base_path = Path(__file__).resolve().parent.parent
+      
+    return os.path.join(base_path, "config.yml")
 
   def run(self):
-    print("[STTTS] Starting...")
+    logger.info("Started.")
     try:
       asyncio.run(self.runner.run())
     except KeyboardInterrupt:
-      print("[STTTS] Exited.")
+      logger.info("Exited.")
   
 def main():
   sttts = STTTS()

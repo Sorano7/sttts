@@ -4,6 +4,9 @@ import collections
 import sounddevice as sd
 import queue
 import asyncio
+from ..logger import get_logger
+
+logger = get_logger("AudioRecorder")
 
 class AudioRecorder:
   def __init__(
@@ -40,13 +43,10 @@ class AudioRecorder:
     try:
       return self.vad.is_speech(data, self.rate)
     except Exception as e:
-      print("[AudioRecorder] VAD error:", e)
+      logger.error(f"VAD error: {e}")
       return False
     
   def callback(self, indata, frames, time, status):
-    if status:
-      print("[AudioRecorder] Status:", status)
-      
     audio_int16 = (indata * 32767).astype(np.int16)
     audio_bytes = audio_int16.tobytes()
 
@@ -67,7 +67,7 @@ class AudioRecorder:
       except asyncio.CancelledError:
         break
       except Exception as e:
-        print("[AudioRecorder] Error in process_audio:", e)
+        logger.error(f"Failed to process audio: {e}")
         
   async def process_audio_chunk(self, data):
     is_speech = self.is_speech(data)
@@ -86,14 +86,14 @@ class AudioRecorder:
         if num_unvoiced == self.ring_buffer_size:
           recording_data = b''.join(self.voiced_frames)
           await self.output_queue.put(recording_data)
-          print("[AudioRecorder] Silence detected. Recording segment pushed to output.")
+          logger.debug("Silence detected. Segment pushed to output.")
           
           self.voiced_frames = []
           self.recording = False
           self.ring_buffer.clear()
         
   async def start(self):
-    print("[AudioRecorder] Running.")
+    logger.info("Running.")
     
     process_task = asyncio.create_task(self.process_audio())
     
@@ -116,5 +116,5 @@ class AudioRecorder:
         pass
       
   async def stop(self):
-    print("[AudioRecorder] Stopped.")
+    logger.info("Stopped.")
     self.stop_event.set()

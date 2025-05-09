@@ -4,6 +4,9 @@ from dataclasses import dataclass, asdict, field
 from typing import List, Dict
 from lingua import Language
 from .audio.utils import get_default_output_name
+from .logger import get_logger
+
+logger = get_logger("Config")
 
 @dataclass
 class Config:
@@ -37,7 +40,7 @@ class Config:
       obj.validate()
       return obj
     except Exception as e:
-      print(f"[Config] Invalid config file: {e}. Generating new config file...")
+      logger.warning(f"Invalid config file: {e}")
       return cls.new(path)
       
   @classmethod
@@ -48,7 +51,7 @@ class Config:
     except FileNotFoundError:
       pass
     except Exception as e:
-      print(f"[Config] Unable to rename old config file. Overwriting...")
+      logger.warning("Unable to rename old config file.")
       
     obj = cls(get_default_output_name())
     obj.save(path)

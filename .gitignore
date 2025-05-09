@@ -6,8 +6,8 @@ __pycache__/
 *.py[cod]
 *$py.class
 
-config.yaml
-config.yaml.old
+config.yml
+config.yml.old
 
 build/
 dist/

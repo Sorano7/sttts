@@ -2,6 +2,9 @@ import asyncio
 from ..config import Config
 from .speech.edge_tts_client import EdgeTTSClient
 from .vrchat.osc_client import OSCClient
+from ..logger import get_logger
+
+logger = get_logger("TextProcessor")
 
 class TextProcessor:
   def __init__(
@@ -19,7 +22,7 @@ class TextProcessor:
     self.stop_event = asyncio.Event()
     
   async def start(self):
-    print("[TextProcessor] Running.")
+    logger.info("Running.")
     
     while not self.stop_event.is_set():
       try:
@@ -33,10 +36,10 @@ class TextProcessor:
         break
       
       except Exception as e:
-        print("[TextProcessor] Error:", e)
+        logger.error(f"{e}")
         
   async def process_text(self, text):
-    print(f"[Output] {text}")
+    logger.info(f"Output -> {text}")
     
     if self.tts_client:
       await self.tts_client.process_text(text)
@@ -44,5 +47,5 @@ class TextProcessor:
       self.osc_client.process_text(text)
       
   async def stop(self):
-    print("[TextProcessor] Stopped.")
+    logger.info("Stopped.")
     self.stop_event.set()
