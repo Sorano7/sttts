@@ -5,6 +5,9 @@ import tempfile
 from pygame import mixer
 from typing import Dict
 from .utils import to_language, detect_language
+from ...logger import get_logger
+
+logger = get_logger("EdgeTTS")
 
 class EdgeTTSClient:
   def __init__(
@@ -37,7 +40,7 @@ class EdgeTTSClient:
       mixer.quit()
       os.remove(temp_filename)
     except Exception as e:
-      print("[EdgeTTSClient] Error:", e)
+      logger.error(f"{e}")
       
   def model_to_use(self, text):
     languages_to_detect = to_language(list(self.models.keys()))

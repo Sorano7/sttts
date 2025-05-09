@@ -21,6 +21,9 @@ set_cuda_paths()
 import asyncio
 import numpy as np
 from faster_whisper import WhisperModel
+from ..logger import get_logger
+
+logger = get_logger("Transcriber")
 
 class WhisperClient:
   def __init__(self, audio_queue: asyncio.Queue, text_queue: asyncio.Queue, model_size='base'):
@@ -31,20 +34,20 @@ class WhisperClient:
     self.stop_event = asyncio.Event()
     
   async def start(self):
-    print("[Transcriber] Running.")
+    logger.info("Running.")
     while not self.stop_event.is_set():
       try:
         data = await self.audio_queue.get()
         text = self.transcribe_audio(data)
-        if text is not None:
+        if text is not None and text.strip():
           await self.text_queue.put(text)
-        
-        print("[Transcriber] Text processed. Pushed to queue.")
+          logger.info("Speech transcribed.")
+
         self.audio_queue.task_done()
       except asyncio.CancelledError:
         break
       except Exception as e:
-        print("[Transcriber] Error:", e)
+        logger.error(f"{e}")
         
         
   def transcribe_audio(self, data):
@@ -55,9 +58,9 @@ class WhisperClient:
       segments, _ = self.model.transcribe(audio_float, vad_filter=True, beam_size=3)
       return " ".join(segment.text for segment in segments)
     except Exception as e:
-      print("[Transcriber] Transcription failed:", e)
+      logger.error(f"Transcription failed: {e}")
       return None
   
   async def stop(self):
-    print("[Transcriber] Stopped.")
+    logger.info("Stopped.")
     self.stop_event.set()
