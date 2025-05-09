@@ -41,7 +41,7 @@ class WhisperClient:
         text = self.transcribe_audio(data)
         if text is not None and text.strip():
           await self.text_queue.put(text)
-          logger.info("Speech transcribed.")
+          logger.debug(f"Transcribed: {text}")
 
         self.audio_queue.task_done()
       except asyncio.CancelledError:

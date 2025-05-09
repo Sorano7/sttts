@@ -86,7 +86,7 @@ class AudioRecorder:
         if num_unvoiced == self.ring_buffer_size:
           recording_data = b''.join(self.voiced_frames)
           await self.output_queue.put(recording_data)
-          logger.info("Silence detected. Segment pushed to output.")
+          logger.debug("Silence detected. Segment pushed to output.")
           
           self.voiced_frames = []
           self.recording = False
