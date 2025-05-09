@@ -1,7 +1,8 @@
 from typing import List
 from lingua import Language, LanguageDetectorBuilder
 
-DEFAULT_LANGS = [Language.ENGLISH, Language.JAPANESE, Language.CHINESE]
+def to_language(list: List[str]):
+  return [Language.from_str(l) for l in list]
 
 def detect_language(text, languages: List[Language]):
   if not languages:
