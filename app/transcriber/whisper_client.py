@@ -34,7 +34,7 @@ class WhisperClient:
     self.stop_event = asyncio.Event()
     
   async def start(self):
-    logger.info("Running.")
+    logger.debug("Running.")
     while not self.stop_event.is_set():
       try:
         data = await self.audio_queue.get()
@@ -62,5 +62,5 @@ class WhisperClient:
       return None
   
   async def stop(self):
-    logger.info("Stopped.")
+    logger.debug("Stopped.")
     self.stop_event.set()

@@ -22,7 +22,7 @@ class TextProcessor:
     self.stop_event = asyncio.Event()
     
   async def start(self):
-    logger.info("Running.")
+    logger.debug("Running.")
     
     while not self.stop_event.is_set():
       try:
@@ -47,5 +47,5 @@ class TextProcessor:
       self.osc_client.process_text(text)
       
   async def stop(self):
-    logger.info("Stopped.")
+    logger.debug("Stopped.")
     self.stop_event.set()

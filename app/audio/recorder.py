@@ -93,7 +93,7 @@ class AudioRecorder:
           self.ring_buffer.clear()
         
   async def start(self):
-    logger.info("Running.")
+    logger.debug("Running.")
     
     process_task = asyncio.create_task(self.process_audio())
     
@@ -116,5 +116,5 @@ class AudioRecorder:
         pass
       
   async def stop(self):
-    logger.info("Stopped.")
+    logger.debug("Stopped.")
     self.stop_event.set()
