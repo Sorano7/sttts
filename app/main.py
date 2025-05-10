@@ -4,7 +4,7 @@ import asyncio
 from .pipeline.runner import Runner
 from .config import Config
 from pathlib import Path
-from .logger import get_logger
+from .logger import get_logger, set_global_log_format, set_global_log_level
 
 logger = get_logger("STTTS")
 
@@ -34,4 +34,6 @@ def main():
   sttts.run()
   
 if __name__ == "__main__":
+  set_global_log_level("DEBUG")
+  set_global_log_format("[time(%H:%M:%S)] [level] | [file] [name] msg")
   main()
