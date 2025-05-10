@@ -20,7 +20,7 @@ class LogRunner:
   
   def __init__(self, level):
     self.set_level(level)
-    self.format = "[time(%H:%M)] [level] [file] [name] msg"
+    self.format = "time(%H:%M) | level | file:line | msg"
   
   def should_print(self, level):
     return _get_level(level) >= self.level
@@ -40,13 +40,15 @@ class LogRunner:
       elif token == 'level':
         return level
       elif token == 'file':
-        return f"{file}:{line}"
+        return file
+      elif token == 'line':
+        return str(line)
       elif token == 'name':
         return name
       elif token == 'msg':
         return msg
       
-    return re.sub(r'(time\([^\)]+\)|level|file|name|msg)', replace, self.format)
+    return re.sub(r'(time\([^\)]+\)|level|file|line|name|msg)', replace, self.format)
 
 class Logger:
   """Class for logging messages"""
@@ -96,7 +98,7 @@ def set_global_log_format(format: str):
   """Set the global log format.
   
   Examples:
-    - [time(%Y-%m-%d %H:%M)] [level] [file] msg
+    - [time(%Y-%m-%d %H:%M)] [level] [file:line] msg
     - time(%H:%M:%S) | level | name: "msg"
   """
   runner.set_format(format)
