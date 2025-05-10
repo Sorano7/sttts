@@ -35,5 +35,5 @@ def main():
   
 if __name__ == "__main__":
   set_global_log_level("DEBUG")
-  set_global_log_format("[time(%H:%M:%S)] [level] | [file] [name] msg")
+  set_global_log_format("time(%H:%M:%S) | level | file:line | name:: msg")
   main()
